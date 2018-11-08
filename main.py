@@ -20,8 +20,10 @@ if __name__ == "__main__":
     test_data = loadmat('../test_32x32.mat')
 
     image_idx = 0
-
-    img = (moy.calculerImageMoyenneClasseX(1,train_data))
-    print(img)
-    plt.imshow(img)
-    plt.show()
+    
+    moy.test(train_data, test_data)    
+    
+    #img = (moy.calculerImageMoyenneClasseX(2,train_data))
+    #print(img)
+    #plt.imshow(img)
+    #plt.show()
