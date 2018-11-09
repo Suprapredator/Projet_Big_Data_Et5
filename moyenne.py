@@ -30,26 +30,44 @@ def calculerImageMoyenneClasseX(X,data):
     return averageInt
     
 def test(trainData, testData):
+    bonneReponse = 0;    
     moyenne = []
     
     for i in range(1,10):
         moyenne.append(calculerImageMoyenneClasseX(i,trainData))  
-        
+
     #image_idx = 0
     #print("Label:", trainData["y"][image_idx])
-    #plt.imshow(trainData["X"][:, :, :, image_idx])
+    #plt.imshow(moyenne[8])
+    #plt.imshow(trainData['X'][:,:,:,0])
     #print(img)
-    #plt.imshow(img)
-    for i in range(100):
-        if trainData['y'][i] == 1:
-            print(estClasseXouY(trainData["X"][:, :, :, i], moyenne[0], moyenne[7]))
-    
     #plt.show()
     
+    
+    
+    #for i in range(10):
+    #    if trainData['y'][i] == donneMoiLaClasse(trainData["X"][:, :, :, i], moyenne):
+    #        bonneReponse += 1
+    
+    print(bonneReponse)
+
+def donneMoiLaClasse(image, moyenne):
+    bonneClasse = 1
+    classe = 2
+    classeAtester = [3,4,5,6,7,8,9]
+
+    while len(classeAtester) != 0:
+        if(not estClasseXouY(image, moyenne[bonneClasse-1], moyenne[classe-1])):
+            bonneClasse = classe
+        classe = classeAtester.pop()
+    
+    return bonneClasse
+
+# retourne true si c'est X et false sinon
 def estClasseXouY(image, moyenneX, moyenneY):
     resultat = 0  
     milieu = (moyenneX+moyenneY)/2
-    vecteurNormal = moyenneX-moyenneY    
+    vecteurNormal = moyenneX-moyenneY
     
     tampon = image-milieu
     for i in range(32):
