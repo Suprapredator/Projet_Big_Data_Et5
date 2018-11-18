@@ -37,7 +37,6 @@ def affinerContours(data, index):
 
 	return image
 
-
 if __name__ == "__main__":
 
     train_data = loadmat('../train_32x32.mat')
