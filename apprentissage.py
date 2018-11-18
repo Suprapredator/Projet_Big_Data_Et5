@@ -38,7 +38,7 @@ def test(data, taille):
         taille = len(data['y'])
     
     for i in range(taille):
-        if data['y'][i]%10 == donneMoiLaClasse(data["X"][:, :, :, i], data, SklearnInstance, 10):
+        if data['y'][i]%10 == donneMoiLaClasse(data["X"][:, :, :, i], data, SklearnInstance, 3):
             bonneReponse += 1
     
     print(bonneReponse)

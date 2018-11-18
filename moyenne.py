@@ -33,7 +33,7 @@ def test(moyenne, data, taille):
 def getMoyennes(trainData):
     moyenne = []
     
-    for i in range(1,10):
+    for i in range(1,11):
         moyenne.append(calculerImageMoyenneClasseX(i,trainData))
     
     return moyenne

@@ -1,6 +1,7 @@
 import numpy as np;
 import matplotlib.pyplot as plt;
 from scipy.io import loadmat;
+from scipy.io import savemat;
 import math as mt;
 import copy
 
@@ -41,17 +42,25 @@ def traitementBinarisation(data):
     for i in range(len(data['y'])):
         dataTraitees = affinerContours(dataTraitees, i)
     
+    ecritureFichier(dataTraitees, 'perfect_train_data.mat')
     return dataTraitees
+
+def ecritureFichier(data, name):
+    savemat('../'+name, data)
     
 
 if __name__ == "__main__":
 
     train_data = loadmat('../train_32x32.mat')
-    test_data = loadmat('../test_32x32.mat')
-
-    image_idx = 2;
-    nouvelImage = traitementBinarisation(train_data)
-    plt.imshow(train_data['X'][:, :, :, image_idx])
-    plt.show()
-    plt.imshow(nouvelImage['X'][:, :, :, image_idx])
-    plt.show()
+    #test_data = loadmat('../test_32x32.mat')
+    
+    #ecritureFichier(train_data, 'perfect_train_data.mat')    
+    
+    #test_data = loadmat('../perfect_train_data.mat') 
+        
+    #image_idx = 2;
+    #nouvelImage = traitementBinarisation(train_data)
+    #plt.imshow(test_data['X'][:, :, :, image_idx])
+    #plt.show()
+    #plt.imshow(nouvelImage['X'][:, :, :, image_idx])
+    #plt.show()

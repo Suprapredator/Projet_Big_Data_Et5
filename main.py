@@ -19,16 +19,15 @@ def printPicture(data, index, RVB):
 if __name__ == "__main__":
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
-    
-    perfect_train_data = pre.traitementBinarisation(train_data)    
+    perfect_train_data = loadmat('../perfect_train_data.mat') #pre.traitementBinarisation(train_data)    
     
     moyennes = moy.getMoyennes(perfect_train_data)
     
-    plt.imshow(moyennes[0])
-    plt.show()    
+    #plt.imshow(moyennes[0])
+    #plt.show()    
     
-    #print('Résultat par moyenne:')
-    #moy.test(moyennes, train_data, 10)
-    #print('Résultat par Sklearn:')
-    #app.test(train_data, 10)
+    print('Résultat par moyenne: ')
+    moy.test(moyennes, perfect_train_data, -1)
+    print('Résultat par Sklearn:')
+    app.test(perfect_train_data, 1000)
     
