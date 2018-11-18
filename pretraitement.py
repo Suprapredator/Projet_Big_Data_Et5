@@ -6,45 +6,51 @@ import copy
 
 ### REGARDER NUMPY PLS "Ca fait le café" -Quentin 2018
 
-def affinerContours(data, index):
-	image = copy.deepcopy(data)
-
+def affinerContours(dataTraitees, index):
 	# Détermination es valeurs moyennes
 	moyennes = [0, 0, 0];
 	for i in range(32):
 		for j in range (32):
 			for k in range (3):
-				moyennes[k] += data['X'][i, j, k, index]
+				moyennes[k] += dataTraitees['X'][i, j, k, index]
 		
 	
 	for k in range (0, 3):
 		moyennes[k] /= 32*32
 	
-	# Création de la nouvelle image
+	# Création de la nouvelle image
 	for i in range(32):
 		for j in range (32):
 			couleur = [0, 0, 0]
 			for k in range (3):
-				if data['X'][i, j, k, index] > moyennes[k]:
+				if dataTraitees['X'][i, j, k, index] > moyennes[k]:
 					couleur[k] = 255
 				else:
 					couleur[k] = 0
 
 			if sum(couleur) > 255 :
-				image['X'][i, j, :, index] = [0, 0, 0]
+				dataTraitees['X'][i, j, :, index] = [0, 0, 0]
 			else:
-				image['X'][i, j, :, index] = [255, 255, 255]
+				dataTraitees['X'][i, j, :, index] = [255, 255, 255]
 
-	return image
+	return dataTraitees
+
+def traitementBinarisation(data):
+    dataTraitees = copy.deepcopy(data)
+    
+    for i in range(len(data['y'])):
+        dataTraitees = affinerContours(dataTraitees, i)
+    
+    return dataTraitees
+    
 
 if __name__ == "__main__":
 
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
 
-    image_idx = 62;
-    nouvelImage = affinerContours(train_data, image_idx)
-    print('Label:', train_data['y'][image_idx])
+    image_idx = 2;
+    nouvelImage = traitementBinarisation(train_data)
     plt.imshow(train_data['X'][:, :, :, image_idx])
     plt.show()
     plt.imshow(nouvelImage['X'][:, :, :, image_idx])

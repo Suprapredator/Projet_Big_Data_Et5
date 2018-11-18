@@ -20,10 +20,15 @@ if __name__ == "__main__":
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
     
-    moyennes = moy.getMoyennes(train_data)
+    perfect_train_data = pre.traitementBinarisation(train_data)    
     
-    print('Résultat par moyenne:')
-    moy.test(moyennes, train_data, 100)
-    print('Résultat par Sklearn:')
-    app.test(train_data, 100)
+    moyennes = moy.getMoyennes(perfect_train_data)
+    
+    plt.imshow(moyennes[0])
+    plt.show()    
+    
+    #print('Résultat par moyenne:')
+    #moy.test(moyennes, train_data, 10)
+    #print('Résultat par Sklearn:')
+    #app.test(train_data, 10)
     
