@@ -4,30 +4,36 @@ from scipy.io import loadmat;
 import math as mt;
 import copy
 
+### REGARDER NUMPY PLS "Ca fait le café" -Quentin 2018
+
 def affinerContours(data, index):
-	#tab = [0, 0, 0]
 	image = copy.deepcopy(data)
 
-	background = 0;
-
-	# Détermination 
-	for i in range(0, 32):
-		for j in range (0, 32):
-			for k in range (0, 3):
-				background += data['X'][i, j, k, index]
+	# Détermination es valeurs moyennes
+	moyennes = [0, 0, 0];
+	for i in range(32):
+		for j in range (32):
+			for k in range (3):
+				moyennes[k] += data['X'][i, j, k, index]
 		
+	
+	for k in range (0, 3):
+		moyennes[k] /= 32*32
+	
+	# Création de la nouvelle image
+	for i in range(32):
+		for j in range (32):
+			couleur = [0, 0, 0]
+			for k in range (3):
+				if data['X'][i, j, k, index] > moyennes[k]:
+					couleur[k] = 255
+				else:
+					couleur[k] = 0
 
-	background /= 32*32*3
-	print("bg :", background)
-	for i in range(0, 32):
-		for j in range (0, 32):
-			couleur = 0
-			for k in range (0, 3):
-				couleur += data['X'][i, j, k, index]
-
-			if abs(background-couleur) < 70 : couleur = 255
-			else: couleur = 0
-			image['X'][i, j, :, index] = [couleur, couleur, couleur]
+			if sum(couleur) > 255 :
+				image['X'][i, j, :, index] = [0, 0, 0]
+			else:
+				image['X'][i, j, :, index] = [255, 255, 255]
 
 	return image
 
@@ -37,7 +43,7 @@ if __name__ == "__main__":
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
 
-    image_idx = 2;
+    image_idx = 62;
     nouvelImage = affinerContours(train_data, image_idx)
     print('Label:', train_data['y'][image_idx])
     plt.imshow(train_data['X'][:, :, :, image_idx])
