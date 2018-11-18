@@ -27,7 +27,7 @@ if __name__ == "__main__":
     #plt.show()    
     
     print('Résultat par moyenne: ')
-    moy.test(moyennes, perfect_train_data, -1)
+    #moy.test(moyennes, perfect_train_data, -1)
     print('Résultat par Sklearn:')
-    app.test(perfect_train_data, 1000)
+    app.test(perfect_train_data, 100)
     
