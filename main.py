@@ -13,21 +13,17 @@ import moyenne as moy;
 import apprentissage as app;
 import pretraitement as pre;
 
+
 def printPicture(data, index, RVB):
     print(data['X'][:,:,RVB,index])
 
 if __name__ == "__main__":
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
-    perfect_train_data = loadmat('../perfect_train_data.mat') #pre.traitementBinarisation(train_data)    
+    perfect_train_data = loadmat('../perfect_train_data.mat') #pre.traitementBinarisation(train_data, 'perfect_train_data.mat')    
+    perfect_test_data = loadmat('../perfect_test_data.mat') #pre.traitementBinarisation(test_data, 'perfect_test_data.mat')     
     
     moyennes = moy.getMoyennes(perfect_train_data)
     
-    #plt.imshow(moyennes[0])
-    #plt.show()    
-    
-    print('Résultat par moyenne: ')
-    #moy.test(moyennes, perfect_train_data, -1)
-    print('Résultat par Sklearn:')
-    app.test(perfect_train_data, 100)
-    
+    moy.test(moyennes, perfect_train_data, -1)
+    app.test(perfect_train_data, perfect_test_data, 100)

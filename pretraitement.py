@@ -36,13 +36,13 @@ def affinerContours(dataTraitees, index):
 
 	return dataTraitees
 
-def traitementBinarisation(data):
+def traitementBinarisation(data, name):
     dataTraitees = copy.deepcopy(data)
     
     for i in range(len(data['y'])):
         dataTraitees = affinerContours(dataTraitees, i)
     
-    ecritureFichier(dataTraitees, 'perfect_train_data.mat')
+    ecritureFichier(dataTraitees, name)
     return dataTraitees
 
 def ecritureFichier(data, name):
