@@ -40,14 +40,35 @@ def traitementBinarisation(data, name):
     dataTraitees = copy.deepcopy(data)
     
     for i in range(len(data['y'])):
+        print(str(i)+'/'+str(len(data['y'])))
         dataTraitees = affinerContours(dataTraitees, i)
-    
+        dataTraitees = fondBancChiffreNoir(dataTraitees, i);
+        
     ecritureFichier(dataTraitees, name)
     return dataTraitees
 
 def ecritureFichier(data, name):
     savemat('../'+name, data)
+  
+def fondBancChiffreNoir(data, index):
+    somme = 0
+    somme += data['X'][0,0,:,index][0]
+    somme += data['X'][0,15,:,index][0]
+    somme += data['X'][0,31,:,index][0]
+    somme += data['X'][31,0,:,index][0]
+    somme += data['X'][31,31,:,index][0]
     
+    # 255*2.5=637.5
+    if somme < 637.5: 
+        for i in range(32):
+            for j in range (32):
+                if data['X'][i, j, :, index][0] == 0:
+                    data['X'][i, j, :, index] = [255,255,255]
+                else:
+                    data['X'][i, j, :, index] = [0,0,0]
+
+    return data
+  
 
 if __name__ == "__main__":
 

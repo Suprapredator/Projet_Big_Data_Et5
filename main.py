@@ -21,9 +21,14 @@ if __name__ == "__main__":
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
     perfect_train_data = loadmat('../perfect_train_data.mat') #pre.traitementBinarisation(train_data, 'perfect_train_data.mat')    
-    perfect_test_data = loadmat('../perfect_test_data.mat') #pre.traitementBinarisation(test_data, 'perfect_test_data.mat')     
+    perfect_test_data = pre.traitementBinarisation(test_data, 'perfect_test_data.mat') #loadmat('../perfect_test_data.mat')     
     
     moyennes = moy.getMoyennes(perfect_train_data)
     
     moy.test(moyennes, perfect_train_data, -1)
     app.test(perfect_train_data, perfect_test_data, 100)
+    
+    
+    #print(perfect_train_data['X'][:,:,:,0]);
+    plt.imshow(moyennes[2]);
+    plt.show()
