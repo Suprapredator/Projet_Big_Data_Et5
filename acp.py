@@ -1,12 +1,9 @@
 import numpy as np;
-import matplotlib.pyplot as plt;
 from scipy.io import loadmat;
 import math as mt;
 import copy
 from sklearn.decomposition import PCA
 import time
-import moyenne as moy
-from sklearn.preprocessing import StandardScaler
 
 def reductionDimension(data):
 	ligne, colonne, rgb, index = data['X'][:, :, :, :].shape
@@ -89,8 +86,3 @@ if __name__ == "__main__":
 	d2_data = reductionDimension(perf_data)
 	moyennes = getMoyennes2d(d2_data)
 	test(moyennes, d2_data, -1)
-
-	"""image_idx = 0;
-	print('Label:', train_data['y'][image_idx])
-	plt.imshow(train_data['X'][:, :, :, image_idx])
-	plt.show()"""
