@@ -9,17 +9,15 @@ import moyenne as moy
 from sklearn.preprocessing import StandardScaler
 
 def reductionDimension(data):
-	
-
 	ligne, colonne, rgb, index = data['X'][:, :, :, :].shape
 	images = data['X'][:, :, :, :].reshape(index, ligne * colonne * rgb)
 	
-	scaler = StandardScaler(copy=False)
+	#scaler = StandardScaler(copy=False)
 	
-	debut = time.time()
-	print("scaling...")
-	images = scaler.fit_transform(images)
-	print("%s sec" % (time.time() - debut))
+	#debut = time.time()
+	#print("scaling...")
+	#images = scaler.fit_transform(images)
+	#print("%s sec" % (time.time() - debut))
 	
 	testPCA = PCA(n_components=10, copy=False)
 
@@ -31,9 +29,9 @@ def reductionDimension(data):
 	"""print("resultat = ")
 	print(images[0, :])"""
 
-	print("copie des donnees")
+	#print("copie des donnees")
 	d2_data = copy.deepcopy(data)
-	d2_data['X'] = images
+	d2_data['X'] = reduc
 
 	return d2_data
 
@@ -69,7 +67,7 @@ def test(moyenne, data, taille):
 	start_time = time.time()
 	bonneReponse = 0;
 	
-	print("test...")
+	print("Test du PCA")
 	if taille == -1 or taille > len(data['y']):
 		taille = len(data['y'])
 	
@@ -77,16 +75,16 @@ def test(moyenne, data, taille):
 		if data['y'][i] == donneMoiLaClasse(data["X"][i, :], moyenne):
 			bonneReponse += 1
 	
-	print('Résultat par moyenne: '+str(bonneReponse)+'/'+str(taille))
+	print('Résultat par moyenne: '+str(bonneReponse)+'/'+str(taille)+' ('+str(bonneReponse*100/taille)+'%)')
 	print("--- %s seconds ---" % (time.time() - start_time)) 
 
 if __name__ == "__main__":
 
 	print("initialisation matrices...")
-	train_data = loadmat('../train_32x32.mat')
-	test_data = loadmat('../test_32x32.mat')
+	#train_data = loadmat('../train_32x32.mat')
+	#test_data = loadmat('../test_32x32.mat')
 	perf_data = loadmat('../perfect_train_data.mat')
-	ptest_data = loadmat('../perfect_test_data.mat')
+	#ptest_data = loadmat('../perfect_test_data.mat')
 
 	d2_data = reductionDimension(perf_data)
 	moyennes = getMoyennes2d(d2_data)
