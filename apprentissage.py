@@ -10,11 +10,18 @@ from sklearn.neighbors import KNeighborsClassifier;
 import time;
 
 def getSklearnInstance(data):
-    instance = KNeighborsClassifier(n_neighbors=5, weights='uniform')
+    X = list()
+    Y = list()    
+    
+    instance = KNeighborsClassifier(n_neighbors=10, weights='uniform')
     nx, ny, npixel, nombre_d_elements = data['X'][:,:,:,:].shape
-    tampon = data['X'][:,:,:,:].reshape(nombre_d_elements,nx*ny*npixel)  
-
-    instance.fit(tampon, np.ravel(data['y']))
+    #tampon = data['X'][:,:,:,:].reshape(nombre_d_elements,nx*ny*npixel)    
+    
+    for i in range(15000):
+        Y.append(data['y'][i])
+        X.append(data['X'][:,:,:,i].reshape(nx*ny*npixel))
+    
+    instance.fit(X, np.ravel(Y))
     
     return instance
     

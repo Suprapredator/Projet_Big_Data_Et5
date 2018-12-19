@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from scipy.io import loadmat
+import time
 torch.manual_seed(0)
 
 class CNN(nn.Module):
@@ -26,7 +27,7 @@ class CNN(nn.Module):
 
 
 if __name__ == '__main__':
-
+    start = time.time()
     # Load the dataset
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
@@ -57,3 +58,5 @@ if __name__ == '__main__':
             loss = F.nll_loss(predictions_train, train_label[i:i+batch_size])
             loss.backward()
             optimizer.step() # Perform the weights update
+            
+    print(str(-start+time.time())+" sec")
