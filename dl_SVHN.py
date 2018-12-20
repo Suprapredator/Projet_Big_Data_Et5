@@ -32,33 +32,66 @@ class CNN(nn.Module):
 
             return x
 
+class LeNet(nn.Module):
 
-if __name__ == '__main__':
+    def __init__(self):
+            super(LeNet, self).__init__()
+            self.conv1 = nn.Conv2d(3, 6, 5)
+            self.conv2 = nn.Conv2d(6, 16, 5)
+            self.fc1 = nn.Linear(400, 120)
+            self.fc2 = nn.Linear(120, 84)
+            self.fc3 = nn.Linear(84, 10)
 
-    # Load the dataset
-    train_data = loadmat('../train_32x32.mat')
-    test_data = loadmat('../test_32x32.mat')
 
-    train_label = train_data['y'][:100]
-    train_label = np.where(train_label==10, 0, train_label)
-    train_label = torch.from_numpy(train_label.astype('int')).squeeze(1)
-    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)[:100]
+    def forward(self, x):
+            x = F.relu(F.max_pool2d(self.conv1(x), (2,2)))
+            x = F.relu(F.max_pool2d(self.conv2(x), (2,2)))
+            x = x.view(x.shape[0], -1) # Flatten the tensor
+            x = F.relu(self.fc1(x))
+            x = F.relu(self.fc2(x))
+            x = F.log_softmax(self.fc3(x), dim=1)
 
-    test_label = test_data['y'][:1000]
-    test_label = np.where(test_label==10, 0, test_label)
-    test_label = torch.from_numpy(test_label.astype('int')).squeeze(1)
-    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)[:1000]
+            return x
 
-    # Hyperparameters
-    epoch_nbr = 50
-    batch_size = 10
-    learning_rate = 1e-3
-    
+class MLP(nn.Module):
+
+    def __init__(self):
+            super(MLP, self).__init__()
+            self.fc1 = nn.Linear(3072, 120)
+            self.fc2 = nn.Linear(120, 800)
+            self.fc3 = nn.Linear(800, 1250)
+            self.fc4 = nn.Linear(1250, 500)
+            self.fc5 = nn.Linear(500, 120)
+            self.fc6 = nn.Linear(120, 10)
+
+
+    def forward(self, x):
+            x = x.contiguous()
+            x = x.view(x.shape[0], -1) # Flatten the tensor
+            x = F.relu(self.fc1(x))
+            x = F.relu(self.fc2(x))
+            x = F.relu(self.fc3(x))
+            x = F.relu(self.fc4(x))
+            x = F.relu(self.fc5(x))
+            x = F.log_softmax(self.fc6(x), dim=1)
+
+            return x
+
+def testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, name):
     # Variables    
     bonneReponses = 0
     start_time = time.time()
-    
-    net = CNN()
+
+    if name == "LeNet":
+        print("\n*** LeNet ***")
+        net = LeNet()
+    if name == "CNN":
+        print("\n*** CNN ***")
+        net = CNN()
+    if name == "MLP":
+        print("\n*** MLP ***")
+        net = MLP()
+        
     optimizer = optim.SGD(net.parameters(), lr=learning_rate)
     for e in range(epoch_nbr):
         bonneReponses = 0
@@ -77,7 +110,7 @@ if __name__ == '__main__':
             optimizer.step() # Perform the weights update
         print("Epoch "+str(e)+": "+str(bonneReponses*100/train_data.shape[0])+"% ("+str(bonneReponses)+"/"+str(train_data.shape[0])+")")
     
-    print("\n Essais sur l'ensemble des données:")
+    print("\n* Essais sur l'ensemble des données:")
     predictions_train = net(train_data)
     _, class_predicted = torch.max(predictions_train, 1)
     bonneReponses = numberGoodInTensors(class_predicted, train_label)
@@ -89,3 +122,28 @@ if __name__ == '__main__':
     print("Test = "+str(bonneReponses*100/test_data.shape[0])+"% ("+str(bonneReponses)+"/"+str(test_data.shape[0])+")")
     
     print("\n---"+str(time.time()-start_time)+" sec ---")
+
+if __name__ == '__main__':
+
+    # Load the dataset
+    train_data = loadmat('../perfect_train_data.mat')
+    test_data = loadmat('../perfect_test_data.mat')
+
+    train_label = train_data['y'][:100]
+    train_label = np.where(train_label==10, 0, train_label)
+    train_label = torch.from_numpy(train_label.astype('int')).squeeze(1)
+    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)[:100]
+
+    test_label = test_data['y'][:1000]
+    test_label = np.where(test_label==10, 0, test_label)
+    test_label = torch.from_numpy(test_label.astype('int')).squeeze(1)
+    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)[:1000]
+
+    # Hyperparameters
+    epoch_nbr = 20
+    batch_size = 10
+    learning_rate = 1e-3
+    
+    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "LeNet")
+    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "CNN")
+    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "MLP")
