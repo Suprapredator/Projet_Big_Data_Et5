@@ -7,6 +7,13 @@ from scipy.io import loadmat
 import time
 torch.manual_seed(0)
 
+def numberGoodInTensors(testTensor, labelTensor):
+    result = 0
+    for i in range(len(testTensor)):
+        if testTensor[i] == labelTensor[i]:
+            result += 1
+    return result
+
 class CNN(nn.Module):
 
     def __init__(self):
@@ -27,7 +34,7 @@ class CNN(nn.Module):
 
 
 if __name__ == '__main__':
-    start = time.time()
+
     # Load the dataset
     train_data = loadmat('../train_32x32.mat')
     test_data = loadmat('../test_32x32.mat')
@@ -43,20 +50,42 @@ if __name__ == '__main__':
     test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)[:1000]
 
     # Hyperparameters
-    epoch_nbr = 10
+    epoch_nbr = 50
     batch_size = 10
-    learning_rate = 1e1
-
+    learning_rate = 1e-3
+    
+    # Variables    
+    bonneReponses = 0
+    start_time = time.time()
+    
     net = CNN()
     optimizer = optim.SGD(net.parameters(), lr=learning_rate)
     for e in range(epoch_nbr):
-        print("Epoch", e)
+        bonneReponses = 0
         for i in range(0, train_data.shape[0], batch_size):
             optimizer.zero_grad() # Reset all gradients to 0
             predictions_train = net(train_data[i:i+batch_size])
             _, class_predicted = torch.max(predictions_train, 1)
+            
+            #print(class_predicted)
+            #print(train_label[i:i+batch_size])
+            #print(numberGoodInTensors(class_predicted, train_label[i:i+batch_size]))
+            
+            bonneReponses += numberGoodInTensors(class_predicted, train_label[i:i+batch_size])
             loss = F.nll_loss(predictions_train, train_label[i:i+batch_size])
             loss.backward()
             optimizer.step() # Perform the weights update
-            
-    print(str(-start+time.time())+" sec")
+        print("Epoch "+str(e)+": "+str(bonneReponses*100/train_data.shape[0])+"% ("+str(bonneReponses)+"/"+str(train_data.shape[0])+")")
+    
+    print("\n Essais sur l'ensemble des données:")
+    predictions_train = net(train_data)
+    _, class_predicted = torch.max(predictions_train, 1)
+    bonneReponses = numberGoodInTensors(class_predicted, train_label)
+    print("Train = "+str(bonneReponses*100/train_data.shape[0])+"% ("+str(bonneReponses)+"/"+str(train_data.shape[0])+")")
+    
+    predictions_train = net(test_data)
+    _, class_predicted = torch.max(predictions_train, 1)
+    bonneReponses = numberGoodInTensors(class_predicted, test_label)
+    print("Test = "+str(bonneReponses*100/test_data.shape[0])+"% ("+str(bonneReponses)+"/"+str(test_data.shape[0])+")")
+    
+    print("\n---"+str(time.time()-start_time)+" sec ---")
