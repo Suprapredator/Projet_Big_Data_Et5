@@ -139,6 +139,6 @@ if __name__ == '__main__':
     batch_size = 10
     learning_rate = 1e-3
     
-    #testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "LeNet")
+    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "LeNet")
     testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "CNN")
-    #testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "MLP")
+    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "MLP")
