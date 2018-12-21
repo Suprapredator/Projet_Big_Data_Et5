@@ -20,6 +20,8 @@ def calculerImageMoyenneClasseX(X,data):
     return np.mean(listeImage, axis=0).astype(int)
     
 def test(moyenne, data, taille):
+    matrice = np.zeros((10,10))    
+    
     start_time = time.time()
     bonneReponse = 0;
     
@@ -27,11 +29,16 @@ def test(moyenne, data, taille):
         taille = len(data['y'])
     
     for i in range(taille):
-        if data['y'][i] == donneMoiLaClasse(data["X"][:, :, :, i], moyenne):
+        classePredite = donneMoiLaClasse(data["X"][:, :, :, i], moyenne)
+        
+        matrice[data['y'][i][0]%10][classePredite%10] += 1        
+        
+        if data['y'][i]%0 == classePredite:
             bonneReponse += 1
     
     print('Résultat par moyenne: '+str(bonneReponse)+'/'+str(taille))
-    print("--- %s seconds ---" % (time.time() - start_time))  
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print(matrice)
 
 def getMoyennes(trainData):
     moyenne = []

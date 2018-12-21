@@ -22,13 +22,14 @@ if __name__ == "__main__":
     perfect_train_data = loadmat('../perfect_train_data.mat') #pre.traitementBinarisation(train_data, 'perfect_train_data.mat')    
     perfect_test_data = loadmat('../perfect_test_data.mat') #pre.traitementBinarisation(test_data, 'perfect_test_data.mat')     
 
-    d2_data = pca.reductionDimension(perfect_train_data)
-    moyennes2D = pca.getMoyennes2d(d2_data)    
-    moyennes = moy.getMoyennes(perfect_train_data)
+    d2_train = pca.reductionDimension(perfect_train_data)
+    d2_test = pca.reductionDimension(perfect_test_data)
+    moyennes2D = pca.getMoyennes2d(d2_train)    
+    #moyennes = moy.getMoyennes(perfect_train_data)
     
-    moy.test(moyennes, perfect_test_data, -1)
-    app.test(perfect_train_data, perfect_test_data, 100)
-    pca.test(moyennes2D, d2_data, -1)    
+    #moy.test(moyennes, perfect_test_data, -1)
+    #app.test(perfect_train_data, perfect_train_data, 100, -1)
+    pca.test(moyennes2D, d2_test, -1)    
     
     
     #print(perfect_train_data['X'][:,:,:,0]);

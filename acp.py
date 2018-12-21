@@ -66,18 +66,22 @@ def donneMoiLaClasse(image, moyenne):
 	return bonneClasse
 
 def test(moyenne, data, taille):
-	start_time = time.time()
-	bonneReponse = 0;
- 
-	if taille == -1 or taille > len(data['y']):
-		taille = len(data['y'])
-	
-	for i in range(taille):
-		if data['y'][i] == donneMoiLaClasse(data["X"][i, :], moyenne):
-			bonneReponse += 1
-	
-	print('Résultat par PCA: '+str(bonneReponse)+'/'+str(taille)+' ('+str(bonneReponse*100/taille)+'%)')
-	print("--- %s seconds ---" % (time.time() - start_time)) 
+    matrice = np.zeros((10,10))    	
+    start_time = time.time()
+    bonneReponse = 0;
+    
+    if taille == -1 or taille > len(data['y']):
+        taille = len(data['y'])
+        
+    for i in range(taille):
+        classePredite = donneMoiLaClasse(data["X"][i, :], moyenne)
+        matrice[data['y'][i][0]%10][classePredite%10] += 1
+        if data['y'][i] == classePredite:
+            bonneReponse += 1
+
+    print('Résultat par PCA: '+str(bonneReponse)+'/'+str(taille)+' ('+str(bonneReponse*100/taille)+'%)')
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print('%f' % matrice)
 
 if __name__ == "__main__":
 

@@ -129,21 +129,21 @@ if __name__ == '__main__':
     train_data = loadmat('../perfect_train_data.mat')
     test_data = loadmat('../perfect_test_data.mat')
 
-    train_label = train_data['y'][:100]
+    train_label = train_data['y']
     train_label = np.where(train_label==10, 0, train_label)
     train_label = torch.from_numpy(train_label.astype('int')).squeeze(1)
-    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)[:100]
+    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)
 
-    test_label = test_data['y'][:1000]
+    test_label = test_data['y']
     test_label = np.where(test_label==10, 0, test_label)
     test_label = torch.from_numpy(test_label.astype('int')).squeeze(1)
-    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)[:1000]
+    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)
 
     # Hyperparameters
-    epoch_nbr = 20
+    epoch_nbr = 10
     batch_size = 10
     learning_rate = 1e-3
     
-    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "LeNet")
+    #testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "LeNet")
     testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "CNN")
-    testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "MLP")
+    #testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_size, learning_rate, "MLP")
