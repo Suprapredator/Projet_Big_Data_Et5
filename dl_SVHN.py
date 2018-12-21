@@ -99,11 +99,6 @@ def testReseau(train_data, train_label, test_data, test_label, epoch_nbr, batch_
             optimizer.zero_grad() # Reset all gradients to 0
             predictions_train = net(train_data[i:i+batch_size])
             _, class_predicted = torch.max(predictions_train, 1)
-            
-            #print(class_predicted)
-            #print(train_label[i:i+batch_size])
-            #print(numberGoodInTensors(class_predicted, train_label[i:i+batch_size]))
-            
             bonneReponses += numberGoodInTensors(class_predicted, train_label[i:i+batch_size])
             loss = F.nll_loss(predictions_train, train_label[i:i+batch_size])
             loss.backward()
@@ -129,15 +124,15 @@ if __name__ == '__main__':
     train_data = loadmat('../perfect_train_data.mat')
     test_data = loadmat('../perfect_test_data.mat')
 
-    train_label = train_data['y']
+    train_label = train_data['y'][:100]
     train_label = np.where(train_label==10, 0, train_label)
     train_label = torch.from_numpy(train_label.astype('int')).squeeze(1)
-    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)
+    train_data = torch.from_numpy(train_data['X'].astype('float32')).permute(3, 2, 0, 1)[:100]
 
-    test_label = test_data['y']
+    test_label = test_data['y'][:1000]
     test_label = np.where(test_label==10, 0, test_label)
     test_label = torch.from_numpy(test_label.astype('int')).squeeze(1)
-    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)
+    test_data = torch.from_numpy(test_data['X'].astype('float32')).permute(3, 2, 0, 1)[:1000]
 
     # Hyperparameters
     epoch_nbr = 10
